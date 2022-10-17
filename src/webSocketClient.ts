@@ -2,14 +2,29 @@ type EventHandler = (data: any) => void;
 type LogHandler = (msg: string) => void;
 
 /**
- * Client-side WebSocket event manager.
+ * A WebSocket client.
+ * Sends messages and expected to receive messages in the following format:
+ * ```json
+ * {
+ *   "event": "eventName",
+ *   "data": "string, object, array, number, etc."
+ * }
+ * ```
  */
 class WebSocketClient {
   private events: { [event: string]: EventHandler };
   private ws: WebSocket;
+  /**
+   * Tracks messages attempted to be sent before the WS connection has been opened.
+   * Messages are sent once the connection succeeds.
+   */
   private preOpenMessages: Array<string>;
   private onLog: LogHandler | undefined;
 
+  /**
+   * Attempts to open a WebSocket connection at the given URL.
+   * @param onOpen An optional callback invoked once the connection is opened
+   */
   constructor(url: string, onOpen?: () => void) {
     this.events = {};
     this.ws = new WebSocket(url);
@@ -43,6 +58,10 @@ class WebSocketClient {
     };
   }
 
+  /**
+   * Adds an event handler for the given event name.
+   * Currently, only one handler can be assigned per event name.
+   */
   addEventHandler(event: string, callback: EventHandler) {
     this.events[event] = callback;
   }

@@ -5,11 +5,13 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint src"
   },
   "keywords": [
     "websocket",
-    "typescript"
+    "typescript",
+    "browser"
   ],
   "author": "Daniel Schubert <me@danielschubert.dev> (https://danielschubert.dev)",
   "license": "MIT",
