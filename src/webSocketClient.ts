@@ -47,19 +47,20 @@ class WebSocketClient {
     };
 
     this.ws.onmessage = (message) => {
-      let parsed: any;
+      let parsed: Record<string, unknown>;
       try {
         parsed = JSON.parse(message.data);
       } catch {
         if (this.onLog) this.onLog(`Non-JSON message received: ${message.data}`);
         return;
       }
-      if (!parsed.event) {
+      if (!parsed || !parsed.event) {
         if (this.onLog) this.onLog(`Invalid message received: ${parsed}`);
         return;
       }
-      if (this.onLog) this.onLog(`Event ${parsed.event} received: ${JSON.stringify(parsed.data)}`);
-      if (this.events[parsed.event]) this.events[parsed.event](parsed.data);
+      const parsedEvent = String(parsed.event);
+      if (this.onLog) this.onLog(`Event ${parsedEvent} received: ${JSON.stringify(parsed.data)}`);
+      if (this.events[parsedEvent]) this.events[parsedEvent](parsed.data);
     };
   }
 
