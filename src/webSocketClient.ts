@@ -21,17 +21,22 @@ class WebSocketClient {
   private preOpenMessages: Array<string>;
   private onLog: LogHandler | undefined;
 
+  static withUrl(url: string, onOpen?: () => void) {
+    return new this(new WebSocket(url), onOpen);
+  }
+
   /**
-   * Attempts to open a WebSocket connection at the given URL.
+   * Uses the given WebSocket to handle sending and receiving message.
+   * Messages sent before the connection has opened will be buffered and sent once it has opened.
    * @param onOpen An optional callback invoked once the connection is opened
    */
-  constructor(url: string, onOpen?: () => void) {
+  constructor(webSocket: WebSocket, onOpen?: () => void) {
     this.events = {};
-    this.ws = new WebSocket(url);
+    this.ws = webSocket;
     this.preOpenMessages = [];
 
     this.ws.onopen = () => {
-      if (this.onLog) this.onLog(`WebSocket connection opened at ${url}`);
+      if (this.onLog) this.onLog(`WebSocket connection opened at ${this.ws.url}`);
       if (onOpen) onOpen();
 
       let msg: string | undefined = this.preOpenMessages.shift();
