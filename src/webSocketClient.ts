@@ -3,7 +3,7 @@ type LogHandler = (msg: string) => void;
 
 /**
  * A WebSocket client.
- * Sends messages and expected to receive messages in the following format:
+ * Sends messages and expects to receive messages in the following format:
  * ```json
  * {
  *   "event": "eventName",
